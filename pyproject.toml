@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "telemetry-carbon-relay-ng"
+version = "0.1.0"
+description = ""
+authors = ["Team Telemetry <telemetry@digital.hmrc.gov.uk>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+requests = "^2.31.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,38 @@
+version: '3'
+services:
+  carbon-relay-ng:
+    container_name: carbon-relay-ng
+    tty: true
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "2003:2003"
+      - "8081:8081"
+  carbon-clickhouse:
+    image: lomik/carbon-clickhouse:latest
+    volumes:
+      - ${PWD}/carbon-clickhouse/carbon-clickhouse.toml:/carbon-clickhouse.toml
+      - ${PWD}/clickhouse/rollup.xml:/rollup.xml
+    ports:
+      - '2103:2103'
+    command: carbon-clickhouse -config="/carbon-clickhouse.toml"
+
+  clickhouse:
+    image: docker.io/bitnami/clickhouse:23
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - '8123:8123'
+      - '9000:9000'
+    volumes:
+      - clickhouse_data:/bitnami/clickhouse
+      - ${PWD}/clickhouse/rollup.xml:/etc/clickhouse-server/conf.d/rollup.xml
+      - ${PWD}/clickhouse/graphite.xml:/etc/clickhouse-server/conf.d/graphite.xml
+      - ${PWD}/clickhouse/dbinit.sh:/docker-entrypoint-startdb.d/dbinit.sh
+      - ${PWD}/clickhouse/schema.sql:/docker-entrypoint-startdb.d/schema.sql
+
+volumes:
+  clickhouse_data:
+    driver: local
+

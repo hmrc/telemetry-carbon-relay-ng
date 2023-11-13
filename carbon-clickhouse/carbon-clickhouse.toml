@@ -1,0 +1,44 @@
+[common]
+# Prefix for store all internal carbon-clickhouse graphs. Supported macroses: {host}
+metric-prefix = "carbon-clickhouse.{host}"
+# Endpoint for store internal carbon metrics. Valid values: "" or "local", "tcp://host:port", "udp://host:port"
+metric-endpoint = "local"
+# Interval of storing internal metrics. Like CARBON_METRIC_INTERVAL
+metric-interval = "1m0s"
+# GOMAXPROCS
+max-cpu = 2
+
+[logging]
+# "stderr", "stdout" can be used as file name
+file = "stdout"
+# Logging error level. Valid values: "debug", "info", "warn" "error"
+level = "debug"
+
+[data]
+path = "/tmp"
+chunk-interval = "1s"
+chunk-auto-interval = "5:10s,20:60s"
+
+[upload.graphite]
+type = "points"
+table = "graphite.graphite"
+threads = 2
+url = "http://clickhouse:8123/"
+timeout = "30s"
+zero-timestamp = true
+
+[upload.graphite_index]
+type = "index"
+table = "graphite.graphite_index"
+threads = 1
+url = "http://clickhouse:8123/"
+timeout = "30s"
+cache-ttl = "12h0m0s"
+disable-daily-index = false
+
+[tcp]
+listen = ":2103"
+enabled = true
+drop-future = "0s"
+drop-past = "0s"
+drop-longer-than = 0

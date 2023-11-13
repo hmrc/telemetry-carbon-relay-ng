@@ -1,6 +1,6 @@
 {
   "template": "https://github.com/hmrc/telemetry-docker-resources",
-  "commit": "b37648709fcf465b254fe060c242c20cf3587ec2",
+  "commit": "04a7fdeae17f888fa5ae9405d6c03c9cce16acd1",
   "checkout": null,
   "context": {
     "cookiecutter": {

@@ -45,7 +45,7 @@ Test 3: Successful Scenario
   3. In the ClickHouse interactive mode, run the following SQL query to check if the ClickHouse container is working:``` SELECT top 5 * FROM graphite.graphite```
   4. Ensure that you see relevant data.
   5. Send a metric to the Carbon ClickHouse setup: ```echo "test.test 5 `date +%s`" | nc -w0 localhost 2003```
-  5. Confirm that the metrics you sent are reflected in the ClickHouse database.
+  5. Confirm that the metrics you sent are reflected in the ClickHouse database: ```select top 5 * from graphite.graphite where Path = 'test.test'```
 
 ### Stop and Remove the Docker Containers:
 ```docker-compose down```

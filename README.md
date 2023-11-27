@@ -42,7 +42,7 @@ Test 2: Blocking Scenario
 Test 3: Successful Scenario
   1. Run the following command to list all running containers and copy the ID of the ClickHouse container: ```docker ps``` 
   2. Enter interactive mode for the ClickHouse container: ```docker exec -it <Container_ID> clickhouse-client```
-  3. In the ClickHouse interactive mode, run the following SQL query to check if the ClickHouse container is working:``` SELECT top 5 * FROM graphite.graphite```
+  3. In the ClickHouse interactive mode, run the following SQL query to check if the ClickHouse container is working:``` SELECT * FROM graphite.graphite ORDER BY Date DESC  LIMIT 5 ```
   4. Ensure that you see relevant data.
   5. Send a metric to the Carbon ClickHouse setup: ```echo "test.test 5 `date +%s`" | nc -w0 localhost 2003```
   5. Confirm that the metrics you sent are reflected in the ClickHouse database: ```select top 5 * from graphite.graphite where Path = 'test.test'```
@@ -51,10 +51,6 @@ Test 3: Successful Scenario
 ```docker-compose down```
 
 ### Testing complete!!!
-
-
-
-
 
 
 

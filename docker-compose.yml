@@ -10,10 +10,8 @@ services:
       - "2003:2003"
       - "8081:8081"
     environment:
-      - CARBON_CLICKHOUSE_HOST_SHARD_1=clickhouse-shard-1-nlb
-      - CARBON_CLICKHOUSE_HOST_SHARD_2=clickhouse-shard-2-nlb
-    command: ["sh", "/start.sh"]
-    env_file: .env
+      - GRAFANA_NET_ADDR=carbon-clickhouse
+      - GRAFANA_NET_API_KEY=carbon-clickhouse
 
   carbon-clickhouse:
     image: lomik/carbon-clickhouse:latest
@@ -23,7 +21,6 @@ services:
     ports:
       - '2103:2103'
     command: carbon-clickhouse -config="/carbon-clickhouse.toml"
-    env_file: .env
 
   clickhouse:
     image: docker.io/bitnami/clickhouse:23
@@ -39,7 +36,6 @@ services:
       - ${PWD}/clickhouse/graphite.xml:/etc/clickhouse-server/conf.d/graphite.xml
       - ${PWD}/clickhouse/dbinit.sh:/docker-entrypoint-startdb.d/dbinit.sh
       - ${PWD}/clickhouse/schema.sql:/docker-entrypoint-startdb.d/schema.sql
-    env_file: .env
 
 volumes:
   clickhouse_data:

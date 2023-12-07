@@ -40,7 +40,7 @@ Test 2: Blocking Scenario
   3. Navigate back to the performance page and hit refresh and you should see Metric.direction_is_blocklist: 1
 
 Test 3: Successful Scenario
-  1. Run the following command to list all running containers and copy the ID of the ClickHouse container: ```docker ps``` 
+  1. Run the following command to list all running containers and copy the ID of the ClickHouse container: ```docker ps```
   2. Enter interactive mode for the ClickHouse container: ```docker exec -it <Container_ID> clickhouse-client```
   3. In the ClickHouse interactive mode, run the following SQL query to check if the ClickHouse container is working:``` SELECT * FROM graphite.graphite ORDER BY Date DESC  LIMIT 5 ```
   4. Ensure that you see relevant data.
@@ -51,9 +51,3 @@ Test 3: Successful Scenario
 ```docker-compose down```
 
 ### Testing complete!!!
-
-
-
-
-
-

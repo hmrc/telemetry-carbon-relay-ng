@@ -1,6 +1,6 @@
 {
   "template": "https://github.com/hmrc/telemetry-docker-resources",
-  "commit": "04a7fdeae17f888fa5ae9405d6c03c9cce16acd1",
+  "commit": "23cadf2247392cf3b02be0becc850ebb6c1f7f07",
   "checkout": null,
   "context": {
     "cookiecutter": {
@@ -10,7 +10,7 @@
       "docker_build_options_default": "",
       "docker_image_name": "telemetry-carbon-relay-ng",
       "docker_image_name_formatted": "telemetry-carbon-relay-ng",
-      "docker_include_default_build": true,
+      "docker_include_default_build": "True",
       "repository_name": "telemetry-carbon-relay-ng",
       "additional_tool_versions": {},
       "docker_build_options_additional": {},

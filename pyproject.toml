@@ -5,6 +5,10 @@ description = ""
 authors = ["Team Telemetry <telemetry@digital.hmrc.gov.uk>"]
 readme = "README.md"
 
+[[tool.poetry.source]]
+name = "artifactory"
+url = "https://artefacts.tax.service.gov.uk/artifactory/api/pypi/pips/simple/"
+
 [tool.poetry.dependencies]
 python = "^3.10"
 

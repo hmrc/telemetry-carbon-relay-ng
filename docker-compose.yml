@@ -10,8 +10,8 @@ services:
       - "2003:2003"
       - "8081:8081"
     environment:
-      - GRAFANA_NET_ADDR=carbon-clickhouse
-      - GRAFANA_NET_API_KEY=carbon-clickhouse
+      - GRAFANA_NET_ADDR=carbon-clickhouse:2103
+      - GRAFANA_NET_API_KEY=carbon-clickhouse:2103
 
   carbon-clickhouse:
     image: lomik/carbon-clickhouse:latest

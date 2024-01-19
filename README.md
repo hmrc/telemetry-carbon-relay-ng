@@ -51,3 +51,19 @@ Test 3: Successful Scenario
 ```docker-compose down```
 
 ### Testing complete!!!
+
+## Known Issue: ERROR - diskqueue(spool_carbon-clickhouse_carbon-clickhouse_2103) failed to sync
+
+If you encounter the following error when viewing Docker logs for the container:
+
+```plaintext
+ERROR: diskqueue(spool_carbon-clickhouse_carbon-clickhouse_2103) failed to sync - rename /var/spool/carbon-relay-ng/spool_carbon-clickhouse_carbon-clickhouse_2103.diskqueue.meta.dat.tmp /var/spool/carbon-relay-ng/spool_carbon-clickhouse_carbon-clickhouse_2103.diskqueue.meta.dat: no such file or directory
+```
+
+Error is caused by:
+```
+environment:
+  - GRAFANA_NET_ADDR=carbon-clickhouse:2103
+  - GRAFANA_NET_API_KEY=carbon-clickhouse:2103
+```
+Please ignore this error as it's not affecting any functionality of the service

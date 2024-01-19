@@ -56,14 +56,9 @@ Test 3: Successful Scenario
 
 If you encounter the following error when viewing Docker logs for the container:
 
-```plaintext
+```
 ERROR: diskqueue(spool_carbon-clickhouse_carbon-clickhouse_2103) failed to sync - rename /var/spool/carbon-relay-ng/spool_carbon-clickhouse_carbon-clickhouse_2103.diskqueue.meta.dat.tmp /var/spool/carbon-relay-ng/spool_carbon-clickhouse_carbon-clickhouse_2103.diskqueue.meta.dat: no such file or directory
 ```
+This error is caused by a local setup where metrics are being sent to two destinations with duplicated names.Each occurrence is treated as a separate endpoint and connection but uses a spool file with the same name. This leads to conflicts and various issues, resulting in the mentioned error.
 
-Error is caused by:
-```
-environment:
-  - GRAFANA_NET_ADDR=carbon-clickhouse:2103
-  - GRAFANA_NET_API_KEY=carbon-clickhouse:2103
-```
 Please ignore this error as it's not affecting any functionality of the service

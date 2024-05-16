@@ -1,4 +1,3 @@
-version: '3'
 services:
   carbon-relay-ng:
     container_name: carbon-relay-ng

@@ -10,7 +10,7 @@
       "docker_build_options_default": "",
       "docker_image_name": "telemetry-carbon-relay-ng",
       "docker_image_name_formatted": "telemetry-carbon-relay-ng",
-      "docker_include_default_build": "True",
+      "docker_include_default_build": true,
       "repository_name": "telemetry-carbon-relay-ng",
       "additional_tool_versions": {},
       "docker_build_options_additional": {},

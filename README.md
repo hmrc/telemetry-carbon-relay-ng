@@ -1,25 +1,19 @@
 
 # telemetry-carbon-relay-ng
 
-This is a placeholder README.md for a new repository
-
-### License
-
-This code is open source software licensed under the [Apache 2.0 License]("http://www.apache.org/licenses/LICENSE-2.0.html").
-
 # Running Tests with Docker Compose
 
 Before running the tests, ensure that you have Docker Compose installed and the required containers are built and running.
 
 ## Docker Compose Commands
 
-### Build the Docker Container
+### Build and run the Docker Containers
 
 ```bash
 docker-compose build
 
 ### Start the Docker Container
-docker-compose up
+docker-compose up --detach
 
 ### Check Running Container
 docker ps
@@ -62,3 +56,7 @@ ERROR: diskqueue(spool_carbon-clickhouse_carbon-clickhouse_2103) failed to sync 
 This error is caused by a local setup where metrics are being sent to two destinations with duplicated names.Each occurrence is treated as a separate endpoint and connection but uses a spool file with the same name. This leads to conflicts and various issues, resulting in the mentioned error.
 
 Please ignore this error as it's not affecting any functionality of the service
+
+### License
+
+This code is open source software licensed under the [Apache 2.0 License]("http://www.apache.org/licenses/LICENSE-2.0.html").

@@ -12,10 +12,10 @@ Before running the tests, ensure that you have Docker Compose installed and the 
 ```bash
 docker-compose build
 
-### Start the Docker Container
+# Start the Docker Container
 docker-compose up --detach
 
-### Check Running Container
+# Check Running Container
 docker ps
 ```
 

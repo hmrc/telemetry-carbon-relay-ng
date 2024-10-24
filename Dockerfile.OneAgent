@@ -1,0 +1,10 @@
+FROM ${DOCKERHUB}grafana/carbon-relay-ng
+
+RUN apk add coreutils util-linux && apk cache clean
+
+COPY templates/carbon-relay-ng.ini /conf/carbon-relay-ng.ini
+
+RUN touch /etc/TESTING
+
+#COPY --from=<your-environment-url>/linux/oneagent-codemodules:<technology> / /
+#ENV LD_PRELOAD /opt/dynatrace/oneagent/agent/lib64/liboneagentproc.so

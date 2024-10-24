@@ -41,13 +41,14 @@ package() {
 
   echo Building the images
   docker build --tag "634456480543.dkr.ecr.eu-west-2.amazonaws.com/telemetry-carbon-relay-ng:${VERSION}" .
+  docker build -f Dockerfile.OneAgent --tag "634456480543.dkr.ecr.eu-west-2.amazonaws.com/telemetry-carbon-relay-ng-oneagent:${VERSION}" .
   print_completed
 }
 
 # Bump the function's version when appropriate
 prepare_release() {
   print_begins
-  poetry run prepare-release
+  poetry run prepare_release
   export_version
   print_completed
 }
@@ -61,6 +62,7 @@ publish_to_ecr() {
 
   echo Pushing the images
   docker push "634456480543.dkr.ecr.eu-west-2.amazonaws.com/telemetry-carbon-relay-ng:${VERSION}"
+  docker push "634456480543.dkr.ecr.eu-west-2.amazonaws.com/telemetry-carbon-relay-ng-oneagent:${VERSION}"
   print_completed
 }
 

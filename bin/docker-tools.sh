@@ -48,7 +48,7 @@ package() {
 # Bump the function's version when appropriate
 prepare_release() {
   print_begins
-  poetry run prepare_release
+  poetry run prepare-release
   export_version
   print_completed
 }

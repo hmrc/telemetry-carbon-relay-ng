@@ -6,16 +6,6 @@ repos:
         entry: ./tools/check-tool-versions.sh
         language: script
         pass_filenames: false
-      - id: validate-cruft-up-to-date
-        name: Validate Cruft up-to-date
-        entry: cruft check
-        language: system
-        pass_filenames: false
-      - id: validate-cruft-no-diff
-        name: Validate Cruft drift
-        entry: cruft diff --exit-code
-        language: system
-        pass_filenames: false
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0
     hooks:

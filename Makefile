@@ -40,12 +40,6 @@ clean: ## Teardown build artefacts
 	@sudo rm -rf ./build ./venv ./venv_package
 .PHONY: clean
 
-cruft_update: ## Update cruft but saving the current state of the complex input variables
-	@cp .cruft.json ~/.cruft.json.bak
-	@cruft update --variables-to-update-file ~/.cruft.json.bak
-	@rm ~/.cruft.json.bak
-.PHONY: clean
-
 cut_release: ## Cut release
 	@./bin/docker-tools.sh cut_release
 .PHONY: cut_release

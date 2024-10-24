@@ -41,6 +41,7 @@ package() {
 
   echo Building the images
   docker build --tag "634456480543.dkr.ecr.eu-west-2.amazonaws.com/telemetry-carbon-relay-ng:${VERSION}" .
+  docker build -f Dockerfile.OneAgent --tag "634456480543.dkr.ecr.eu-west-2.amazonaws.com/telemetry-carbon-relay-ng:${VERSION}-oneagent" .
   print_completed
 }
 
@@ -61,6 +62,7 @@ publish_to_ecr() {
 
   echo Pushing the images
   docker push "634456480543.dkr.ecr.eu-west-2.amazonaws.com/telemetry-carbon-relay-ng:${VERSION}"
+  docker push "634456480543.dkr.ecr.eu-west-2.amazonaws.com/telemetry-carbon-relay-ng:${VERSION}-oneagent"
   print_completed
 }
 

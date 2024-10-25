@@ -12,4 +12,4 @@ phases:
   build:
     commands:
       - PIP_INDEX_URL=https://artefacts.tax.service.gov.uk/artifactory/api/pypi/pips/simple poetry run pre-commit run --all-files --verbose
-      - make verify
+      - make verify_publish_release

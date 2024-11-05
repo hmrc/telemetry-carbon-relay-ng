@@ -60,7 +60,7 @@ publish_to_ecr() {
   aws ecr get-login-password --region "eu-west-2" | docker login --username AWS --password-stdin "634456480543.dkr.ecr.eu-west-2.amazonaws.com"
 
   echo Pushing the images
-  docker push "634456480543.dkr.ecr.eu-west-2.amazonaws.com/telemetry-carbon-relay-ng:${VERSION}"
+  docker push "634456480543.dkr.ecr.eu-west-2.amazonaws.com/telemetry-carbon-relay-ng:${VERSION} --all-tags"
   print_completed
 }
 

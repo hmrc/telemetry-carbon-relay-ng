@@ -60,6 +60,8 @@ publish_to_ecr() {
   echo Authenticating with ECR
   aws ecr get-login-password --region "eu-west-2" | docker login --username AWS --password-stdin "634456480543.dkr.ecr.eu-west-2.amazonaws.com"
 
+  aws secretsmanager get-secret-value --secret-id /dynatrace/oneagent/bnw89501 --query SecretString --region eu-west-2 | tr -d '"' | docker login --pasword-stdin bnw89501.live.dynatrace.com --username bnw89501
+
   echo Pushing the images
   docker push "634456480543.dkr.ecr.eu-west-2.amazonaws.com/telemetry-carbon-relay-ng:${VERSION}"
   docker push "634456480543.dkr.ecr.eu-west-2.amazonaws.com/telemetry-carbon-relay-ng:${VERSION}-oneagent"

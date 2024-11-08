@@ -1,8 +1,8 @@
-FROM golang:latest as builder
+FROM golang:alpine3.20 as builder
 
 COPY go /go
 
-RUN cd /go && go get && GOARCH=amd64 GOOS=linux go build .
+RUN cd /go && go get && go build .
 
 FROM ${DOCKERHUB}grafana/carbon-relay-ng
 
@@ -19,6 +19,6 @@ COPY --from=builder /go/alex /app/alex
 RUN ls -l /app && file /app/alex
 RUN uname -a
 
-ENTRYPOINT [ "/app/alex" ]
-
 EXPOSE 2003
+
+ENTRYPOINT [ "/app/alex" ]

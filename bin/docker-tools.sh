@@ -76,7 +76,7 @@ export_version() {
     exit 1
   fi
 
-  VERSION=$(cat .version)
+  VERSION="$(cat .version)-alex1-"
   export VERSION=${VERSION}
 }
 

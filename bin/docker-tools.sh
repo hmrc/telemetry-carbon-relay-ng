@@ -39,6 +39,8 @@ package() {
   poetry export --without-hashes --format requirements.txt --output "requirements.txt"
   poetry export --without-hashes --format requirements.txt --with dev --output "requirements-tests.txt"
 
+  aws secretsmanager get-secret-value --secret-id /dynatrace/oneagent/bnw89501 --query SecretString --region eu-west-2 | tr -d '"' | docker login --pasword-stdin bnw89501.live.dynatrace.com --username bnw89501
+
   echo Building the images
   docker build --tag "634456480543.dkr.ecr.eu-west-2.amazonaws.com/telemetry-carbon-relay-ng:${VERSION}" .
   docker build -f Dockerfile.OneAgent --tag "634456480543.dkr.ecr.eu-west-2.amazonaws.com/telemetry-carbon-relay-ng:${VERSION}-oneagent" .
@@ -59,8 +61,6 @@ publish_to_ecr() {
 
   echo Authenticating with ECR
   aws ecr get-login-password --region "eu-west-2" | docker login --username AWS --password-stdin "634456480543.dkr.ecr.eu-west-2.amazonaws.com"
-
-  aws secretsmanager get-secret-value --secret-id /dynatrace/oneagent/bnw89501 --query SecretString --region eu-west-2 | tr -d '"' | docker login --pasword-stdin bnw89501.live.dynatrace.com --username bnw89501
 
   echo Pushing the images
   docker push "634456480543.dkr.ecr.eu-west-2.amazonaws.com/telemetry-carbon-relay-ng:${VERSION}"

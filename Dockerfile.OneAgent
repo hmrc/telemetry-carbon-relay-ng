@@ -10,11 +10,14 @@ COPY --from=bnw89501.live.dynatrace.com/linux/oneagent-codemodules-musl:all / /
 ENV LD_PRELOAD=/opt/dynatrace/oneagent/agent/lib64/liboneagentproc.so
 
 # Install packages required by Fargate to enable AWS ECS Exec:
-RUN apk add coreutils util-linux
+RUN apk add coreutils util-linux file
 
 COPY templates/carbon-relay-ng.ini /conf/carbon-relay-ng.ini
 
 COPY --from=builder /go/alex /app/alex
+
+RUN ls -l /app && file /app/alex
+RUN uname -a
 
 ENTRYPOINT [ "/app/alex" ]
 

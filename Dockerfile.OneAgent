@@ -2,7 +2,7 @@ FROM golang:latest as builder
 
 COPY go /go
 
-RUN cd /go && go get && go build .
+RUN cd /go && go get && GOARCH=amd64 GOOS=linux go build .
 
 FROM ${DOCKERHUB}grafana/carbon-relay-ng
 

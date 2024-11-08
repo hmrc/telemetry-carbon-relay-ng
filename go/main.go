@@ -22,6 +22,6 @@ func main() {
 			traceContext.GetTraceId(), traceContext.GetSpanId(), traceContext.IsValid())
 	})
 
-	fmt.Println("Starting HTTP server at port 8080...")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	fmt.Println("Starting HTTP server at port 2003...")
+	log.Fatal(http.ListenAndServe(":2003", nil))
 }

@@ -17,3 +17,5 @@ COPY templates/carbon-relay-ng.ini /conf/carbon-relay-ng.ini
 COPY --from=builder /go/alex /app/alex
 
 ENTRYPOINT [ "/app/alex" ]
+
+EXPOSE 2003

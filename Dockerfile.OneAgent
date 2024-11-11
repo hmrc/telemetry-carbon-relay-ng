@@ -1,10 +1,10 @@
-FROM --platform=linux/arm64/v8 golang:alpine3.20 as builder
+FROM golang:alpine3.20 as builder
 
 COPY go /go
 
 RUN cd /go && go get && go build .
 
-FROM --platform=linux/arm64/v8 ${DOCKERHUB}grafana/carbon-relay-ng
+FROM ${DOCKERHUB}grafana/carbon-relay-ng
 
 COPY --from=bnw89501.live.dynatrace.com/linux/oneagent-codemodules-musl:all / /
 ENV LD_PRELOAD=/opt/dynatrace/oneagent/agent/lib64/liboneagentproc.so

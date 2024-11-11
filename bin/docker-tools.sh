@@ -39,8 +39,11 @@ package() {
   poetry export --without-hashes --format requirements.txt --output "requirements.txt"
   poetry export --without-hashes --format requirements.txt --with dev --output "requirements-tests.txt"
 
+  aws secretsmanager get-secret-value --secret-id /dynatrace/oneagent/bnw89501 --query SecretString --region eu-west-2 | tr -d '"' | docker login --password-stdin bnw89501.live.dynatrace.com --username bnw89501
+
   echo Building the images
   docker build --tag "634456480543.dkr.ecr.eu-west-2.amazonaws.com/telemetry-carbon-relay-ng:${VERSION}" .
+  docker build -f Dockerfile.OneAgent --tag "634456480543.dkr.ecr.eu-west-2.amazonaws.com/telemetry-carbon-relay-ng:${VERSION}-oneagent" .
   print_completed
 }
 
@@ -61,6 +64,7 @@ publish_to_ecr() {
 
   echo Pushing the images
   docker push "634456480543.dkr.ecr.eu-west-2.amazonaws.com/telemetry-carbon-relay-ng:${VERSION}"
+  docker push "634456480543.dkr.ecr.eu-west-2.amazonaws.com/telemetry-carbon-relay-ng:${VERSION}-oneagent"
   print_completed
 }
 
@@ -74,7 +78,7 @@ export_version() {
     exit 1
   fi
 
-  VERSION=$(cat .version)
+  VERSION="$(cat .version)-alex9"
   export VERSION=${VERSION}
 }
 

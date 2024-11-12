@@ -1,0 +1,19 @@
+FROM golang:alpine3.20 as builder
+
+COPY go /go
+
+RUN cd /go && go get && go build .
+
+FROM ${DOCKERHUB}grafana/carbon-relay-ng
+
+COPY --from=bnw89501.live.dynatrace.com/linux/oneagent-codemodules-musl:all / /
+ENV LD_PRELOAD=/opt/dynatrace/oneagent/agent/lib64/liboneagentproc.so
+
+# Install packages required by Fargate to enable AWS ECS Exec:
+RUN apk add coreutils util-linux file
+
+COPY templates/carbon-relay-ng.ini /conf/carbon-relay-ng.ini
+
+COPY --from=builder /go/alex /app/alex
+
+ENTRYPOINT [ "/bin/sh" ]

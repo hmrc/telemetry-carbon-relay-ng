@@ -8,6 +8,8 @@
 set -o errexit
 set -o nounset
 
+VERSION=0.1.1
+
 #####################################################################
 ## Beginning of the configurations ##################################
 
@@ -39,8 +41,11 @@ package() {
   poetry export --without-hashes --format requirements.txt --output "requirements.txt"
   poetry export --without-hashes --format requirements.txt --with dev --output "requirements-tests.txt"
 
+  aws secretsmanager get-secret-value --secret-id /dynatrace/oneagent/bnw89501 --query SecretString --region eu-west-2 | tr -d '"' | docker login --password-stdin bnw89501.live.dynatrace.com --username bnw89501
+
   echo Building the images
-  docker build --tag "634456480543.dkr.ecr.eu-west-2.amazonaws.com/telemetry-carbon-relay-ng:${VERSION}" .
+  docker build --platform linux/amd64 --tag 634456480543.dkr.ecr.eu-west-2.amazonaws.com/temp/slugrunner:${VERSION} -f slugrunner/Dockerfile slugrunner
+  docker build --platform linux/amd64 --tag 634456480543.dkr.ecr.eu-west-2.amazonaws.com/temp/slugrunner:${VERSION}-oneagent -f slugrunner/Dockerfile.OneAgent slugrunner
   print_completed
 }
 
@@ -60,7 +65,8 @@ publish_to_ecr() {
   aws ecr get-login-password --region "eu-west-2" | docker login --username AWS --password-stdin "634456480543.dkr.ecr.eu-west-2.amazonaws.com"
 
   echo Pushing the images
-  docker push "634456480543.dkr.ecr.eu-west-2.amazonaws.com/telemetry-carbon-relay-ng:${VERSION}"
+  docker push "634456480543.dkr.ecr.eu-west-2.amazonaws.com/temp/slugrunner:${VERSION}"
+  docker push "634456480543.dkr.ecr.eu-west-2.amazonaws.com/temp/slugrunner:${VERSION}-oneagent"
   print_completed
 }
 
@@ -74,7 +80,7 @@ export_version() {
     exit 1
   fi
 
-  VERSION=$(cat .version)
+  VERSION="$(cat .version)-damon1"
   export VERSION=${VERSION}
 }
 

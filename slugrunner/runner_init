@@ -1,0 +1,128 @@
+#!/bin/bash -ex
+## Load slug from Bind Mount, Artifacts dir, URL or STDIN
+
+set -eo pipefail
+
+signing_key_url="https://artefacts.tax.service.gov.uk/artifactory/webstore-local/slugs/slug_signing_public_key.gpg"
+signing_key_finger_print="${SLUG_SIGNING_KEY_FINGERPRINT}:6:"
+
+function emit_log_message() {
+  level="${1}"
+  message="${2}"
+  echo "{\"logger\":\"slugrunner\", \"level\": \"""${level}""\", \"message\": \"""${message}""\"}"
+}
+
+function log_info_message() {
+  emit_log_message "INFO" "${1}"
+}
+
+function log_warning_message() {
+  emit_log_message "WARN" "${1}"
+}
+
+function log_error_message() {
+  emit_log_message "ERROR" "${1}"
+}
+
+function verify_slug() {
+  pushd /tmp > /dev/null
+  wget -q -O slug_signing_public_key.gpg "$signing_key_url"
+  mkdir -p /tmp/slug-verification -m 700
+  gpg --quiet --homedir /tmp/slug-verification --import slug_signing_public_key.gpg || true
+
+  echo "$signing_key_finger_print" | gpg --quiet --homedir /tmp/slug-verification --import-ownertrust
+  # get the files and verify
+  log_info_message "Attempting to retrieve slug signature: $SLUG_URL.sig"
+  wget -q -O slug.tgz.sig "$SLUG_URL.sig" || (log_warning_message "Failed to retrieve slug signature from $SLUG_URL.sig")
+
+  log_info_message "Attempting to retrieve slug: $SLUG_URL"
+  wget -q -O slug.tgz "$SLUG_URL" || (log_warning_message "Failed to retrieve slug from $SLUG_URL")
+
+  log_info_message "Verifying SLUG $SLUG_URL with signature"
+  gpg --quiet --homedir /tmp/slug-verification --verify slug.tgz.sig slug.tgz 2>/dev/null || log_warning_message "$SLUG_URL slug signature verification failed"
+  rm -f slug.tgz.sig slug_signing_public_key.gpg
+  popd > /dev/null
+}
+
+ls -lsa ${HOME}
+ls -lsa ${HOME}/.cache
+
+export HOME="${APP_HOME:-"/app"}"
+mkdir -p "${HOME}"
+
+# if [[ -n $(ls -A "${HOME}" | grep -v 'conf') ]]; then
+#   true
+if [[ -s "/artifacts/slug.tgz" ]]; then
+  tar xzf "/artifacts/slug.tgz" -C "${HOME}"
+elif ! [[ -z "${SLUG_URL}" ]]; then
+  verify_slug
+  tar -xzf /tmp/slug.tgz -C "${HOME}"
+  rm -f /tmp/slug.tgz
+  unset SLUG_URL
+else
+  cat | tar -xzC "${HOME}"
+fi
+cd "${HOME}"
+
+## load profile settings from the slug, if they exist
+if [[ -d .profile.d ]]; then
+  for file in .profile.d/*; do
+    source "${file}"
+  done
+fi
+
+## Write out the keystore.p12 file if defined (used in platops)
+if [ -n "$KEYSTORE_P12" ]; then
+  log_info_message "Writing keystore file..."
+  echo $KEYSTORE_P12 | base64 -d > /app/keystore.p12
+  chmod 0400 /app/keystore.p12
+fi
+
+## Decode and store files from app-config-$env
+PREFIX="BASE64FILES_"
+
+for var in $(compgen -e | grep "^$PREFIX"); do
+  IFS='_' read -r _ index type <<< "$var"
+
+  if [[ "$type" == "LOCATION" ]]; then
+    location[$index]=${!var}
+  elif [[ "$type" == "CONTENT" ]]; then
+    content[$index]=${!var}
+  fi
+done
+
+for index in "${!location[@]}"; do
+  if [[ -n "${content[$index]}" && -n "${location[$index]}" ]]; then
+    echo "${content[$index]}" | base64 --decode > "${location[$index]}" 2>/dev/null || \
+    log_error_message "Error processing ${location[$index]}: Invalid base64 or insufficient permissions."
+  else
+    log_error_message "Error: location or content missing for BASE64FILES index $index."
+  fi
+done
+
+## download and attach the agent, if defined
+if [ -n "$AGENT_URL" ]; then
+  curl --silent --location --noproxy "discoverd" --retry 5 --fail "${AGENT_URL}" -o "agent.jar"
+  export JAVA_OPTS="$JAVA_OPTS -javaagent:$HOME/agent.jar"
+fi
+
+
+if [ -n "$BASE_CONFIG" ]; then
+  log_info_message "Putting app config base to ${HOME}/conf/${MICRO_SERVICE_NAME}.conf"
+  echo "$BASE_CONFIG" | base64 -d > "${HOME}/conf/${MICRO_SERVICE_NAME}.conf"
+fi
+
+## Inject "start" command to run processes defined in Procfile
+case "$1" in
+start)
+  command=$(awk -v profile_regex="^${2}:" '$1 ~ profile_regex { print $2 }' Procfile)
+  ;;
+*)
+  printf -v command " %q" "$@"
+  ;;
+esac
+
+## Run!
+
+log_info_message "Starting service with command: ${command}"
+exec "${command}"

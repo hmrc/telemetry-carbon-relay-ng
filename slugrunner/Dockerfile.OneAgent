@@ -1,4 +1,4 @@
-FROM artefacts.tax.service.gov.uk/slugrunner:1.43.0
+FROM artefacts.tax.service.gov.uk/slugrunner:1.42.0
 
 COPY --from=bnw89501.live.dynatrace.com/linux/oneagent-codemodules-musl:all / /
 ENV LD_PRELOAD=/opt/dynatrace/oneagent/agent/lib64/liboneagentproc.so

@@ -1,0 +1,23 @@
+ARG DOCKERHUB=dockerhub.tax.service.gov.uk
+FROM ${DOCKERHUB}/debian:bullseye-slim
+
+RUN sed -i 's/http:/https:/g' /etc/apt/sources.list
+
+RUN echo 'Acquire::https::Verify-Peer "false";' >/etc/apt/apt.conf.d/80-ignore-tls
+RUN apt-get update && apt-get install -y ca-certificates && rm -f /etc/apt/apt.conf.d/80-ignore-tls
+
+RUN apt-get update && apt-get -y install curl nginx-light gettext-base wget gpg
+
+RUN mkdir /runner && chmod 0755 /runner
+COPY runner_init /runner/init 
+RUN chmod 0755 /runner/init
+
+RUN groupadd -g 1001 runner && useradd -u 1001 -g 1001 -d /app runner
+RUN mkdir /app && chown -R runner:runner /app && chmod 0770 /app
+
+USER runner
+
+ENV SLUG_URL https://artefacts.tax.service.gov.uk/artifactory/webstore/slugs/alert-simulator/alert-simulator_0.34.0_0.5.2.tgz
+ENV SLUG_SIGNING_KEY_FINGERPRINT 8D039CA6D83E948088C3056BA90DC320C2E69D53 
+
+ENTRYPOINT ["/runner/init","start","web"]

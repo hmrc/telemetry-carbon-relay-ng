@@ -17,9 +17,10 @@ priority = "supplemental"
 
 [tool.poetry.dependencies]
 python = "~3.10"
-version-incrementor = "^1"
-pre-commit = "^3"
 cruft = "^2"
+pre-commit = "^3"
+toml = "^0"
+version-incrementor = "^1"
 
 [build-system]
 requires = ["poetry_core>=1.0.0"]

@@ -42,7 +42,7 @@ clean: ## Teardown build artefacts
 
 cruft_update: ## Update cruft but saving the current state of the complex input variables
 	@cp .cruft.json ~/.cruft.json.bak
-	@cruft update --variables-to-update-file ~/.cruft.json.bak
+	@poetry run cruft update --variables-to-update-file ~/.cruft.json.bak
 	@rm ~/.cruft.json.bak
 .PHONY: clean
 

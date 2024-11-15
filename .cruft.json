@@ -1,18 +1,18 @@
 {
   "template": "https://github.com/hmrc/telemetry-docker-resources",
-  "commit": "8ab9d184a09aa7e502d986e76275334f5d836612",
-  "checkout": null,
+  "commit": "b8b5237d0e465300607823ef2c7c158d0c236b11",
+  "checkout": "b8b5237d0e465300607823ef2c7c158d0c236b11",
   "context": {
     "cookiecutter": {
       "aws_account_id": "634456480543",
       "aws_region": "eu-west-2",
       "custom_makefile_name": "",
+      "description": "",
       "docker_build_options_default": "",
       "docker_image_name": "telemetry-carbon-relay-ng",
       "docker_image_name_formatted": "telemetry-carbon-relay-ng",
       "docker_include_default_build": true,
       "repository_name": "telemetry-carbon-relay-ng",
-      "additional_tool_versions": {},
       "docker_build_options_additional": {},
       "_template": "https://github.com/hmrc/telemetry-docker-resources"
     }

@@ -35,7 +35,7 @@ package() {
   export_version
 
   echo Building the images
-  docker build --tag "634456480543.dkr.ecr.eu-west-2.amazonaws.com/telemetry-carbon-relay-ng:${VERSION}" .
+  docker build --tag "634456480543.dkr.ecr.eu-west-2.amazonaws.com/telemetry-carbon-relay-ng:${VERSION}" --tag "634456480543.dkr.ecr.eu-west-2.amazonaws.com/telemetry-carbon-relay-ng:latest" .
   print_completed
 }
 

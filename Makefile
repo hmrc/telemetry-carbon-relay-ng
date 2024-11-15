@@ -1,11 +1,8 @@
 SHELL := /usr/bin/env bash
 POETRY_OK := $(shell type -P poetry)
 POETRY_PATH := $(shell poetry env info --path)
-POETRY_REQUIRED := $(shell cat .poetry-version)
 POETRY_VIRTUALENVS_IN_PROJECT ?= true
 PYTHON_OK := $(shell type -P python)
-PYTHON_REQUIRED := $(shell cat .python-version)
-PYTHON_VERSION ?= $(shell python -V | cut -d' ' -f2)
 
 ### WARNING! This is a generated file and should ONLY be edited in https://github.com/hmrc/telemetry-docker-resources
 
@@ -19,7 +16,7 @@ check_poetry: check_python ## Check Poetry installation
     ifeq ('$(POETRY_OK)','')
 	    $(error package 'poetry' not found!)
     else
-	    @echo Found Poetry ${POETRY_REQUIRED}
+	    @echo Found Poetry
     endif
 .PHONY: check_poetry
 
@@ -29,11 +26,6 @@ check_python: ## Check Python installation
     else
 	    @echo Found Python
     endif
-    ifneq ('$(PYTHON_REQUIRED)','$(PYTHON_VERSION)')
-	    $(error incorrect version of python found: '${PYTHON_VERSION}'. Expected '${PYTHON_REQUIRED}'!)
-    else
-	    @echo Found Python ${PYTHON_REQUIRED}
-    endif
 .PHONY: check_python
 
 clean: ## Teardown build artefacts
@@ -42,7 +34,7 @@ clean: ## Teardown build artefacts
 
 cruft_update: ## Update cruft but saving the current state of the complex input variables
 	@cp .cruft.json ~/.cruft.json.bak
-	@cruft update --variables-to-update-file ~/.cruft.json.bak
+	@poetry run cruft update --variables-to-update-file ~/.cruft.json.bak
 	@rm ~/.cruft.json.bak
 .PHONY: clean
 

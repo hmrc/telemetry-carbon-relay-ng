@@ -34,11 +34,6 @@ package() {
   print_begins
   export_version
 
-  echo Export poetry packages
-  rm -fv requirements.txt requirements-tests.txt
-  poetry export --without-hashes --format requirements.txt --output "requirements.txt"
-  poetry export --without-hashes --format requirements.txt --with dev --output "requirements-tests.txt"
-
   echo Building the images
   docker build --tag "634456480543.dkr.ecr.eu-west-2.amazonaws.com/telemetry-carbon-relay-ng:${VERSION}" .
   print_completed
@@ -61,6 +56,7 @@ publish_to_ecr() {
 
   echo Pushing the images
   docker push "634456480543.dkr.ecr.eu-west-2.amazonaws.com/telemetry-carbon-relay-ng:${VERSION}"
+  docker push "634456480543.dkr.ecr.eu-west-2.amazonaws.com/telemetry-carbon-relay-ng:latest"
   print_completed
 }
 

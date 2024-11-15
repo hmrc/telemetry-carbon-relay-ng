@@ -1,7 +1,7 @@
 {
   "template": "https://github.com/hmrc/telemetry-docker-resources",
-  "commit": "b8b5237d0e465300607823ef2c7c158d0c236b11",
-  "checkout": "b8b5237d0e465300607823ef2c7c158d0c236b11",
+  "commit": "3191c95566d25f8b13cfe315246c6aac5ffc448d",
+  "checkout": "3191c95566d25f8b13cfe315246c6aac5ffc448d",
   "context": {
     "cookiecutter": {
       "aws_account_id": "634456480543",

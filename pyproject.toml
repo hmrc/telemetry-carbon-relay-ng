@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "telemetry-carbon-relay-ng"
-version = "0.1.0"
+version = "0.0.0"
 description = ""
 readme = "README.md"
 authors = ["Team Telemetry <telemetry@digital.hmrc.gov.uk>"]

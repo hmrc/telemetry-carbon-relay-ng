@@ -9,7 +9,7 @@ Before running the tests, ensure that you have Docker Compose installed and the 
 
 ### Build and run the Docker Containers
 
-```bash
+```shell
 docker-compose build
 
 # Start the Docker Container
@@ -42,7 +42,10 @@ Test 3: Successful Scenario
   6. Confirm that the metrics you sent are reflected in the ClickHouse database: ```SELECT * FROM graphite.graphite where Path = 'test.test' ORDER BY Date DESC  LIMIT 5```
 
 ### Stop and Remove the Docker Containers:
-```docker-compose down```
+
+```shell
+docker-compose down
+```
 
 ### Testing complete!!!
 

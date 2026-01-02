@@ -22,7 +22,7 @@ services:
     command: carbon-clickhouse -config="/carbon-clickhouse.toml"
 
   clickhouse:
-    image: docker.io/bitnami/clickhouse:23
+    image: public.ecr.aws/bitnami/clickhouse:23
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
       - ANOTHER_VARIABLE=value

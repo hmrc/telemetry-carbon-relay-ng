@@ -1,6 +1,9 @@
 
 # telemetry-carbon-relay-ng
 
+> [!WARNING]
+> The tests in `tests/` are not run automatically and do not cover all functionality
+
 # Running Tests with Docker Compose
 
 Before running the tests, ensure that you have Docker Compose installed and the required containers are built and running.

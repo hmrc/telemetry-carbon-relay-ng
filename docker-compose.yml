@@ -11,6 +11,8 @@ services:
     environment:
       - GRAFANA_NET_ADDR=carbon-clickhouse:2103
       - GRAFANA_NET_API_KEY=carbon-clickhouse:2103
+    volumes:
+      -  ${PWD}/templates/carbon-relay-ng.ini:/conf/carbon-relay-ng.ini
 
   carbon-clickhouse:
     image: lomik/carbon-clickhouse:latest
@@ -22,7 +24,8 @@ services:
     command: carbon-clickhouse -config="/carbon-clickhouse.toml"
 
   clickhouse:
-    image: docker.io/bitnami/clickhouse:23
+    container_name: clickhouse
+    image: public.ecr.aws/bitnami/clickhouse:23
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
       - ANOTHER_VARIABLE=value

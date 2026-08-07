@@ -16,7 +16,7 @@ name = "PyPI"
 priority = "supplemental"
 
 [tool.poetry.dependencies]
-python = "~3.10"
+python = "~3.14"
 cruft = "^2"
 pre-commit = "^3"
 toml = "^0"

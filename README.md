@@ -1,4 +1,3 @@
-
 # telemetry-carbon-relay-ng
 
 > [!WARNING]
@@ -7,6 +6,26 @@
 # Running Tests with Docker Compose
 
 Before running the tests, ensure that you have Docker Compose installed and the required containers are built and running.
+
+## Table of Contents
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+- [Prerequisites](#prerequisites)
+- [Docker Compose Commands](#docker-compose-commands)
+  - [Build and run the Docker Containers](#build-and-run-the-docker-containers)
+  - [Test Scenarios](#test-scenarios)
+  - [Stop and Remove the Docker Containers:](#stop-and-remove-the-docker-containers)
+  - [Testing complete!!!](#testing-complete)
+- [Known Issue: ERROR - diskqueue(spool_carbon-clickhouse_carbon-clickhouse_2103) failed to sync](#known-issue-error---diskqueuespool_carbon-clickhouse_carbon-clickhouse_2103-failed-to-sync)
+- [License](#license)
+
+<!-- END doctoc -->
+
+## Prerequisites
+
+* [mise](https://mise.jdx.dev/) to manage tool versions and integrates with `uv`.
+* [uv](https://docs.astral.sh/uv/) to manage Python virtual environments and dependencies.
 
 ## Docker Compose Commands
 
@@ -63,6 +82,6 @@ This error is caused by a local setup where metrics are being sent to two destin
 
 Please ignore this error as it's not affecting any functionality of the service
 
-### License
+## License
 
 This code is open source software licensed under the [Apache 2.0 License]("http://www.apache.org/licenses/LICENSE-2.0.html").

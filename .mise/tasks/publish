@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+#MISE depends=["package"]
+#MISE description="Push the Docker image to the internal-base ECR repo"
+
+VERSION=$(cat .version)
+export IMAGE_VERSION=${VERSION}
+aws ecr get-login-password --region "eu-west-2" | docker login --username AWS --password-stdin "${IMAGE_REPO}"
+docker push "${IMAGE_REPO}/${IMAGE_NAME}:${IMAGE_VERSION}"
+docker push "${IMAGE_REPO}/${IMAGE_NAME}:latest"

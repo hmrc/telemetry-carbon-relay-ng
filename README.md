@@ -14,73 +14,99 @@ Before running the tests, ensure that you have Docker Compose installed and the 
 - [Prerequisites](#prerequisites)
 - [Docker Compose Commands](#docker-compose-commands)
   - [Build and run the Docker Containers](#build-and-run-the-docker-containers)
-  - [Test Scenarios](#test-scenarios)
-  - [Stop and Remove the Docker Containers:](#stop-and-remove-the-docker-containers)
-  - [Testing complete!!!](#testing-complete)
-- [Known Issue: ERROR - diskqueue(spool_carbon-clickhouse_carbon-clickhouse_2103) failed to sync](#known-issue-error---diskqueuespool_carbon-clickhouse_carbon-clickhouse_2103-failed-to-sync)
+- [Test Scenarios](#test-scenarios)
+  - [Test 1: Invalidation Scenario](#test-1-invalidation-scenario)
+  - [Test 2: Blocking Scenario](#test-2-blocking-scenario)
+  - [Test 3: Successful Scenario](#test-3-successful-scenario)
+  - [Clean-up the test artifacts](#clean-up-the-test-artifacts)
 - [License](#license)
 
 <!-- END doctoc -->
 
 ## Prerequisites
 
-* [mise](https://mise.jdx.dev/) to manage tool versions and integrates with `uv`.
-* [uv](https://docs.astral.sh/uv/) to manage Python virtual environments and dependencies.
+- [mise](https://mise.jdx.dev/) to manage tool versions and integrates with `uv`.
+- [uv](https://docs.astral.sh/uv/) to manage Python virtual environments and dependencies.
 
 ## Docker Compose Commands
 
 ### Build and run the Docker Containers
 
 ```shell
-docker-compose build
+# Build the telemetry carbon-relay-ng container image
+docker compose build
 
-# Start the Docker Container
-docker-compose up --detach
+# Ensure no stale data
+docker volume rm telemetry-carbon-relay-ng_clickhouse_data
 
-# Check Running Container
-docker ps
+# Start compose stack
+docker compose up --detach
+
+# Check containers are running
+docker compose ps
 ```
 
-### Test Scenarios
-Now that the Docker containers are running, proceed to run the test scenarios outlined below.
+## Test Scenarios
 
-Test 1: Invalidation Scenario
-  1. Navigate to the monitoring Documentation https://github.com/grafana/carbon-relay-ng/blob/master/docs/monitoring.md
-  2. Click on the link that's on the first bullet point to get to the performance page
-  3. To start the invalid test send a data point to the Carbon server: ```echo "tax.test `date +%s`" | nc -w0 localhost 2003```
-  4. Navigate back to the performance page and hit refresh and you should see Err.type_is_invalid": 1
+The docker compose stack must be running for the following test scenarios outlined below.
 
-Test 2: Blocking Scenario
-  1. Choose a block path to test the blocklist functionality. This can be found in templates/carbon-relay-ng.ini
-  2. Send a metric to the Carbon server for the chosen block path: ```echo "tax.test 10 `date +%s`" | nc -w0 localhost 2003```
-  3. Navigate back to the performance page and hit refresh and you should see Metric.direction_is_blocklist: 1
+### Test 1: Invalidation Scenario
 
-Test 3: Successful Scenario
-  1. Run the following command to list all running containers and copy the ID of the ClickHouse container: ```docker ps```
-  2. Enter interactive mode for the ClickHouse container: ```docker exec -it <Container_ID> clickhouse-client```
-  3. In the ClickHouse interactive mode, run the following SQL query to check if the ClickHouse container is working:``` SELECT * FROM graphite.graphite ORDER BY Date DESC  LIMIT 5 ```
-  4. Ensure that you see relevant data.
-  5. Send a metric to the Carbon ClickHouse setup: ```echo "test.test 5 `date +%s`" | nc -w0 localhost 2003```
-  6. Confirm that the metrics you sent are reflected in the ClickHouse database: ```SELECT * FROM graphite.graphite where Path = 'test.test' ORDER BY Date DESC  LIMIT 5```
+  1. Send an invalid data point to the Carbon server:
 
-### Stop and Remove the Docker Containers:
+     ```shell
+     echo "tax.test `date +%s`" | nc -w0 localhost 2003
+     ```
+
+  2. Confirm that the Carbon server reports invalid data:
+
+     ```shell
+     curl --silent http://localhost:8081/debug/vars2 | grep 'Err.type_is_invalid": 1'
+     ```
+
+### Test 2: Blocking Scenario
+
+  1. Choose a block path to test the blocklist functionality (this can be found in [templates/carbon-relay-ng.ini](./templates/carbon-relay-ng.ini)).
+  2. Send a metric to the Carbon server for the chosen block path, for example:
+
+     ```shell
+     echo "tax.test 10 `date +%s`" | nc -w0 localhost 2003
+     ```
+
+  3. Confirm that the Carbon server reports a blocklist:
+
+     ```shell
+     curl --silent http://localhost:8081/debug/vars2 | grep 'Metric.direction_is_blocklist": 1'
+     ```
+
+### Test 3: Successful Scenario
+
+  1. Run the following command and verfiy five rows are returned:
+
+     ```shell
+     docker compose exec clickhouse \
+       clickhouse-client -q "SELECT * FROM graphite.graphite ORDER BY Date DESC  LIMIT 5"
+     ```
+
+  2. Send a metric to the Carbon ClickHouse setup:
+
+     ```shell
+     echo "test.test 5 `date +%s`" | nc -w0 localhost 2003
+     ```
+
+  3. Run the following command and verfiy one row is returned:
+
+     ```shell
+     docker compose exec clickhouse \
+       clickhouse-client -q "SELECT * FROM graphite.graphite where Path = 'test.test'"
+     ```
+
+### Clean-up the test artifacts
 
 ```shell
-docker-compose down
+docker compose down
+docker volume rm telemetry-carbon-relay-ng_clickhouse_data
 ```
-
-### Testing complete!!!
-
-## Known Issue: ERROR - diskqueue(spool_carbon-clickhouse_carbon-clickhouse_2103) failed to sync
-
-If you encounter the following error when viewing Docker logs for the container:
-
-```
-ERROR: diskqueue(spool_carbon-clickhouse_carbon-clickhouse_2103) failed to sync - rename /var/spool/carbon-relay-ng/spool_carbon-clickhouse_carbon-clickhouse_2103.diskqueue.meta.dat.tmp /var/spool/carbon-relay-ng/spool_carbon-clickhouse_carbon-clickhouse_2103.diskqueue.meta.dat: no such file or directory
-```
-This error is caused by a local setup where metrics are being sent to two destinations with duplicated names.Each occurrence is treated as a separate endpoint and connection but uses a spool file with the same name. This leads to conflicts and various issues, resulting in the mentioned error.
-
-Please ignore this error as it's not affecting any functionality of the service
 
 ## License
 

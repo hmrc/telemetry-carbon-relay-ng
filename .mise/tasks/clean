@@ -10,6 +10,6 @@ fi
 
 echo "🔎 Clearing build and test artifacts..."
 find "${MISE_CONFIG_ROOT}" -type f -name '.version' -delete
-find "${MISE_CONFIG_ROOT}" -type f -name 'requirements.txt' -delete
-find "${MISE_CONFIG_ROOT}" -type f -name 'requirements-tests.txt' -delete
+rm './requirements.txt'
+rm 'requirements-tests.txt'
 echo "😎 Done."

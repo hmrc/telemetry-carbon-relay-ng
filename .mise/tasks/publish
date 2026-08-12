@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-#MISE depends=["package"]
 #MISE description="Push the Docker image to the internal-base ECR repo"
+#MISE depends=["package"]
 
 VERSION=$(cat .version)
 export IMAGE_VERSION=${VERSION}

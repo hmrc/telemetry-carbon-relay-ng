@@ -1,4 +1,15 @@
 #!/usr/bin/env bash
 #MISE description="Teardown build artefacts"
 
-rm -rf ./.venv .version
+#USAGE flag "--include-venv" help="If set, also delete the contents of virtualenv (.venv)"
+
+if [ "${usage_include_venv:-false}" = "true" ]; then
+  echo "🔎 Clearing Virtualenv..."
+  rm -rfv .venv
+fi
+
+echo "🔎 Clearing build and test artifacts..."
+find "${MISE_CONFIG_ROOT}" -type f -name '.version' -delete
+find "${MISE_CONFIG_ROOT}" -type f -name 'requirements.txt' -delete
+find "${MISE_CONFIG_ROOT}" -type f -name 'requirements-tests.txt' -delete
+echo "😎 Done."

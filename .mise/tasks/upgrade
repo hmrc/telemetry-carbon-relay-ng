@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#MISE description="Run updates to pre-commit, bump mise tools to latest"
+#MISE depends=["setup"]
+
+pre-commit autoupdate
+mise upgrade --bump

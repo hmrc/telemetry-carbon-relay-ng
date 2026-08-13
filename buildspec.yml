@@ -1,0 +1,19 @@
+version: 0.2
+
+env:
+  shell: bash
+  variables:
+    GIT_BRANCH: main # Ensure this is explicitly set so version incrementor can bump a major version
+    MISE_DISABLE_TOOLS: uv # uv is already installed in the build container
+
+phases:
+  install:
+    commands:
+      - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --host=tcp://127.0.0.1:2375 --storage-driver=overlay2 &
+      - timeout 15 sh -c "until docker info; do echo .; sleep 1; done"
+      - mise run setup
+  build:
+    commands:
+      - mise run prepare-release
+      - mise run publish
+      - mise run cut-release

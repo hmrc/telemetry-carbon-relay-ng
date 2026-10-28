@@ -3,4 +3,4 @@
 #MISE depends=["setup"]
 
 pre-commit autoupdate
-mise upgrade --bump
+uv lock --upgrade
